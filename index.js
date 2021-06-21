@@ -3,6 +3,7 @@ const helper = require("./Helpers/Helper");
 const Request = require("./Request/Request");
 const protected = require("./Routes/protect")
 const commandArg = require("./jcc/getCommands")
+const asyncHandler = require("./Error/asyncHandler")
 const path = require("path")
 
 class Gambtech extends App {
@@ -44,6 +45,7 @@ module.exports = {
   jwtSign: helper.jwtSign,
   jwtVerify: helper.jwtVerify,
   protected,
+  asyncHandler,
   Request,
   commandLineArg:app.commandLineArg,
   Auth:helper.authAttempt
