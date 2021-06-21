@@ -26,7 +26,7 @@ class Helper {
       if (!user || !password) return false;
 
       return this.verfiyPassword(password.toString(), user.password)
-        ? { user: user._id }
+        ? { user: user }
         : false;
     } catch (error) {
       console.log(error);

@@ -1,20 +1,32 @@
 const App = require("./Application");
 const helper = require("./Helpers/Helper");
 const Request = require("./Request/Request");
+const protected = require("./Routes/protect")
+const commandArg = require("./jcc/getCommands")
+const path = require("path")
 
 class Gambtech extends App {
-  getController(fileName) {
+  ApiController(fileName) {
     const rootPath = require("app-root-path").path;
-    return require(`${rootPath}/app/Controllers/${fileName}`);
+    return require(path.resolve(`${rootPath}/app/Controllers/Api/${fileName}`));
+  }
+
+  AdminController(fileName) {
+    const rootPath = require("app-root-path").path;
+    return require(path.resolve(`${rootPath}/app/Controllers/Admin/${fileName}`));
   }
 
   getModel(fileName) {
     const rootPath = require("app-root-path").path;
-    return require(`${rootPath}/app/Models/${fileName}`);
+    return require(path.resolve(`${rootPath}/app/Models/${fileName}`));
   }
   getMiddleware(fileName) {
     const rootPath = require("app-root-path").path;
-    return require(`${rootPath}/app/Middlewares/${fileName}`);
+    return require(path.resolve(`${rootPath}/app/Middlewares/${fileName}`));
+  }
+  commandLineArg(command)
+  {
+   return commandArg(command)
   }
 }
 
@@ -23,12 +35,16 @@ module.exports = {
   server: app.server(),
   AdminRoute: app.AdminRoutes(),
   ApiRoute: app.ApiRoutes(),
-  getController: app.getController,
+  ApiController: app.ApiController,
+  AdminController: app.AdminController,
   getModel: app.getModel,
   getMiddleware: app.getMiddleware,
   bcrypt: helper.bcrypt,
   verifyHash: helper.verfiyPassword,
   jwtSign: helper.jwtSign,
   jwtVerify: helper.jwtVerify,
+  protected,
   Request,
+  commandLineArg:app.commandLineArg,
+  Auth:helper.authAttempt
 };
