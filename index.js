@@ -1,10 +1,9 @@
 const App = require("./Application");
 const helper = require("./Helpers/Helper");
 const Request = require("./Request/Request");
-const protected = require("./Routes/protect")
-const commandArg = require("./jcc/getCommands")
-const asyncHandler = require("./Error/asyncHandler")
-const path = require("path")
+const protected = require("./Routes/protect");
+const commandArg = require("./jcc/getCommands");
+const path = require("path");
 
 class Gambtech extends App {
   ApiController(fileName) {
@@ -14,7 +13,9 @@ class Gambtech extends App {
 
   AdminController(fileName) {
     const rootPath = require("app-root-path").path;
-    return require(path.resolve(`${rootPath}/app/Controllers/Admin/${fileName}`));
+    return require(path.resolve(
+      `${rootPath}/app/Controllers/Admin/${fileName}`
+    ));
   }
 
   getModel(fileName) {
@@ -25,9 +26,9 @@ class Gambtech extends App {
     const rootPath = require("app-root-path").path;
     return require(path.resolve(`${rootPath}/app/Middlewares/${fileName}`));
   }
-  commandLineArg(command)
-  {
-   return commandArg(command)
+  commandLineArg(argv) {
+    const command = argv.slice(2);
+    return commandArg(command);
   }
 }
 
@@ -42,11 +43,11 @@ module.exports = {
   getMiddleware: app.getMiddleware,
   bcrypt: helper.bcrypt,
   verifyHash: helper.verfiyPassword,
-  jwtSign: helper.jwtSign,
-  jwtVerify: helper.jwtVerify,
-  protected,
-  asyncHandler,
+  token: helper.jwtSign,
+  verifyToken: helper.jwtVerify,
+  authAttempt: helper.authAttempt,
+  auth,
   Request,
-  commandLineArg:app.commandLineArg,
-  Auth:helper.authAttempt
+  commandLineArg: app.commandLineArg,
 };
+

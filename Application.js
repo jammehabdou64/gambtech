@@ -4,7 +4,7 @@ const MiddlewareHandler = require("./middlewareHandler/Middleware");
 const Routes = require("./Routes/Routes");
 const database = require(`${require("app-root-path").path}/database/index`);
 const ErrorHandler = require("./Error/ErrorHandler");
-
+const socketIo = require("socket.io");
 
 class Application {
   constructor() {
@@ -16,8 +16,6 @@ class Application {
     //main app middleware class
     new MiddlewareHandler(this.app, express);
     //db
-
-    
   }
 
   ApiRoutes() {
@@ -29,14 +27,31 @@ class Application {
     return new Routes(this.app, this.express, "/api/admin");
   }
 
+  socket(server) {
+    return socketIo(server, {
+      cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+      },
+    });
+  }
   server() {
     const port = process.env.PORT || process.env.NODE_ENV;
     const server = http.Server(this.app);
-    const appError = new ErrorHandler(this.app)
+    const appError = new ErrorHandler(this.app);
+    const io = this.socket(server);
+
+    const consoleSocket = require(`${
+      require("app-root-path").path
+    }/routes/console`);
+
     return {
       listen() {
         database();
-        appError.handler()
+        appError.handler();
+        io.on("connection", (socket) => {
+          consoleSocket(io, socket);
+        });
         server.listen(port, () =>
           console.log(`Server running on http://localhost:${port}`)
         );
@@ -48,3 +63,4 @@ class Application {
 }
 
 module.exports = Application;
+
