@@ -46,7 +46,7 @@ module.exports = {
   token: helper.jwtSign,
   verifyToken: helper.jwtVerify,
   authAttempt: helper.authAttempt,
-  auth,
+  auth:protected,
   Request,
   commandLineArg: app.commandLineArg,
 };
