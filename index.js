@@ -42,7 +42,7 @@ module.exports = {
   getModel: app.getModel,
   getMiddleware: app.getMiddleware,
   bcrypt: helper.bcrypt,
-  verifyHash: helper.verfiyPassword,
+  verifyHash: helper.verifyPassword,
   token: helper.jwtSign,
   verifyToken: helper.jwtVerify,
   authAttempt: helper.authAttempt,
@@ -50,4 +50,5 @@ module.exports = {
   Request,
   commandLineArg: app.commandLineArg,
 };
+
 

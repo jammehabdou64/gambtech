@@ -1,5 +1,6 @@
 const bcryptJs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const AppError = require("../Error/AppError")
 
 class Helper {
   bcrypt(password) {
@@ -7,42 +8,42 @@ class Helper {
     return bcryptJs.hashSync(password.toString(), salt);
   }
 
-  verfiyPassword(password, hashPassword) {
+  verifyPassword(password, hashPassword) {
      try{
-    return bcryptJs.compareSync(password, hashPassword);
+      return bcryptJs.compareSync(password,hashPassword)
     
-    }catch(err){console.log(err)}
+    }catch(err){new AppError(err , 500)}
   }
 
   jwtSign(data) {
      try{
     return jwt.sign(data, process.env.JWT_SECTRET);
     
-    }catch(err){console.log(err)}
+    }catch(err){new AppError(err , 500)}
   }
 
   jwtVerify(token) {
     try{
     return jwt.verify(token, process.env.JWT_SECTRET);
     
-    }catch(err){console.log(err)}
+    }catch(err){new AppError(err , 500)}
   }
 
-  async authAttempt(data, password) {
+  async authAttempt(data={}, password) {
     try {
-      console.log(password)
+      
       const User = require(`${require("app-root-path").path}/app/Models/User`);
-      const user = await User.findOne({data}).select("+password");
+      const user = await User.findOne(data).select("+password");
       if (!user || !password) return false;
-
-      return this.verfiyPassword(password, user.password)
-        ? { user: user }
+      return bcryptJs.compareSync(password,user.password)
+        ? user
         : false;
     } catch (error) {
-      console.log(error);
+      new AppError(error , 500);
     }
   }
 }
 
 module.exports = new Helper();
+
 
